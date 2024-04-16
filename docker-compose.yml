@@ -1,7 +1,7 @@
 version: "3.9"
 
 # We are setting up 2 or 3 services: 
-# - web container for the Flask application (test github again)
+# - web container for the Flask application (test github again 2)
 # - db container for mysql
 # - appsmith container for appsmith
 services:
