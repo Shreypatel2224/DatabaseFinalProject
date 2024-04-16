@@ -1,6 +1,6 @@
 version: "3.9"
 
-# We are setting up 2 or 3 services: Benoit change 4
+# We are setting up 2 or 3 services: 
 # - web container for the Flask application 
 # - db container for mysql
 # - appsmith container for appsmith
@@ -8,11 +8,11 @@ services:
 
   ##################################################################
   # configure the webserver container
-  web:
+  web2:
     
     # Set up the web server according to the Dockerfile inside the api/ folder
     build: flask-app/
-    container_name: web
+    container_name: web2
     # connect the src folder in on the host machine to the code folder in the container. 
     # note that the code folder in contaier is the working directory (see DockerFile).
     volumes: ['./flask-app:/code', './secrets:/secrets'] 
@@ -26,14 +26,14 @@ services:
       - "8001:4000"
 
     links:
-      - db
+      - db2
 
   ##################################################################
   # configure the mysql container
-  db:
+  db2:
     # We are using the base image of MySQL v.8
     image: mysql:8
-    container_name: db
+    container_name: db2
     volumes:
       # anything in (or mounted in) /docker-entrypoint-initdb.d in the container 
       # will automatically be executed when the container is created
