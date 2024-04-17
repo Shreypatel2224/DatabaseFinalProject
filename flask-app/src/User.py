@@ -147,7 +147,7 @@ def get_user2(Username):
 
 
 @user.route('/User/<User_ID>', methods=['PUT'])
-def put_customers(User_ID):
+def update_user2(User_ID):
     data = request.get_json()
     cursor = db.get_db().cursor()
 
@@ -157,7 +157,7 @@ def put_customers(User_ID):
     Email = data.get('Email')
 
     query = '''
-        UPDATE customers
+        UPDATE User
         SET Username = %s,
             last_name = %s,
             Password = %s,
@@ -166,4 +166,4 @@ def put_customers(User_ID):
     '''
     cursor.execute(query, (Username, User_Type, Password, Email, User_ID))
     db.get_db().commit()
-    return jsonify({'success': True, 'message': 'Customer updated successfully'}), 200
+    return jsonify({'success': True, 'message': 'User updated successfully'}), 200
