@@ -121,7 +121,8 @@ def get_question_by_ID(Question_ID):
 @question.route('/Question/<Status>', methods=['GET'])
 def get_question_by_status(Status):
     cursor = db.get_db().cursor()
-    cursor.execute('select * from Question where Question_ID = {0}'.format(Status))
+    query = 'SELECT * FROM Question WHERE Status = %s'
+    cursor.execute(query, (Status,))
     row_headers = [x[0] for x in cursor.description]
     json_data = []
     theData = cursor.fetchall()
