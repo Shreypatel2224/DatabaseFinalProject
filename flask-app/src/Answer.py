@@ -117,6 +117,28 @@ def get_answer_by_ID(Answer_ID):
     the_response.mimetype = 'application/json'
     return the_response
 
+
+# Get answer by question id
+@answer.route('/Answer/<Question_ID>', methods=['GET'])
+def get_answer_by_Question(Question_ID):
+    cursor = db.get_db().cursor()
+    cursor.execute('select * from Answer where Answer_ID = {0}'.format(Question_ID))
+    row_headers = [x[0] for x in cursor.description]
+    json_data = []
+    theData = cursor.fetchall()
+    for row in theData:
+        row = (dict(zip(row_headers, row)))
+        for key, value in row.items():
+            if isinstance(value, bytes): 
+                row[key] = value.decode('utf-8')
+        json_data.append(row)
+
+    the_response = make_response(jsonify(json_data))
+    the_response.status_code = 200
+    the_response.mimetype = 'application/json'
+    return the_response
+
+
 # Get answer by user id
 @answer.route('/Answer/<User_ID>', methods=['GET'])
 def get_answer_by_UID(User_ID):
