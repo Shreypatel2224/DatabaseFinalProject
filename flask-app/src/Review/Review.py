@@ -20,8 +20,6 @@ def get_review():
     return the_response
 
 
-
-
 @review.route('/review', methods=['POST'])
 def add_review():
     data = request.get_json()
@@ -45,31 +43,38 @@ def add_review():
             'INSERT INTO Review (Title, Date, Rating, Content, User_ID, Position_ID, SkillsUsed) VALUES (%s, %s, %s, %s, %s, %s, %s)',
             (title, date, rating, content, user_id, position_id, skills_used)
         )
-        db.get_db().commit()
-        return jsonify({'success': 'Review added'}), 201
+        db.get_db().commit()  # commit
+        review_id = cursor.lastrowid # ge the auto incremented id 
+        return jsonify({'success': 'Review added', 'Review_ID': review_id}), 201  
     except Exception as e:
-        db.get_db().rollback()
-        return jsonify({'error': 'Failed to add review'}), 500
+        db.get_db().rollback()  # Roll back if error
+        return jsonify({'error': 'Failed to add review: {}'.format(str(e))}), 500
     finally:
-        cursor.close()
+        cursor.close() 
 
-@review.route('/review/<int:review_id>', methods=['GET'])
+#----------------------------------------------------------------------------------------------------------------------------------------
+
+@review.route('/review/<review_id>', methods=['GET'])
 def get_review(review_id):
-    try:
-        cursor = db.get_db().cursor()
-        cursor.execute('SELECT * FROM Review WHERE Review_ID = %s', (review_id,))
-        row_headers = [x[0] for x in cursor.description]
-        review = cursor.fetchone()
-        if not review:
-            return jsonify({'message': 'Review not found'}), 404
-        json_data = dict(zip(row_headers, review))
-        return jsonify(json_data), 200
-    except Exception as e:
-        return jsonify({'error': 'Failed to fetch review'}), 500
-    finally:
-        cursor.close()
+    cursor = db.get_db().cursor()
+    cursor.execute('select * from Review where id = {0}'.format(review_id))
+    row_headers = [x[0] for x in cursor.description]
+    json_data = []
+    theData = cursor.fetchall()
+    for row in theData:
+        row = (dict(zip(row_headers, row)))
+        for key, value in row.items():
+            if isinstance(value, bytes): 
+                row[key] = value.decode('utf-8')
+        json_data.append(row)
 
-@review.route('/review/<int:review_id>', methods=['DELETE'])
+    the_response = make_response(jsonify(json_data))
+    the_response.status_code = 200
+    the_response.mimetype = 'application/json'
+    return the_response
+
+
+@review.route('/review/<review_id>', methods=['DELETE'])
 def delete_review(review_id):
     try:
         cursor = db.get_db().cursor()
@@ -79,11 +84,51 @@ def delete_review(review_id):
             return jsonify({'error': 'Review not found'}), 404
         return jsonify({'success': 'Review deleted'}), 200
     except Exception as e:
-        db.get_db().rollback()
-        return jsonify({'error': 'Failed to delete review'}), 500
+        db.get_db().rollback() 
+        return jsonify({'error': 'Failed to delete review: {}'.format(str(e))}), 500
     finally:
         cursor.close()
 
+
+@review.route('/review/<review_id>', methods=['PUT'])
+def update_review(review_id):
+    data = request.get_json()
+    if not data:
+        return jsonify({'error': 'No data provided'}), 400
+
+    cursor = db.get_db().cursor()
+    cursor.execute("SELECT * FROM Review WHERE Review_ID = %s", (review_id,))
+    if cursor.rowcount == 0:
+        return jsonify({'error': 'Review not found'}), 404
+    updates = []
+    values = []
+    for field in ['Title', 'Date', 'Rating', 'Content', 'User_ID', 'Position_ID', 'SkillsUsed', ]:
+        if field in data:
+            updates.append(f"{field} = %s")
+            values.append(data[field])
+    
+    if not updates:
+        return jsonify({'error': 'There were no valid fields to update'}), 400
+    
+    update_stmt = "UPDATE Review SET " + ", ".join(updates) + " WHERE Review_ID = %s"
+    values.append(review_id)
+    
+    try:
+        cursor.execute(update_stmt, values)
+        if cursor.rowcount == 0:
+            db.get_db().rollback()
+            return jsonify({'error': 'No Review updated'}), 400
+        else:
+            db.get_db().commit()
+            return jsonify({'message': 'Review updated successfully'}), 200
+    except Exception as e:
+        db.get_db().rollback()
+        return jsonify({'error': str(e)}), 500
+
+
+
+
+#--------------------------------------------------------------------------------------------------------------------------
 @review.route('/review/<int:position_id>/<int:cycle_id>/<int:company_id>', methods=['GET'])
 def get_review_by_keys(position_id, cycle_id, company_id):
     try:
