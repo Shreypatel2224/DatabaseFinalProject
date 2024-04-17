@@ -55,9 +55,9 @@ def create_CP():
             (CPID, Perks, Hourly, BonusTotal, HousingTotal, RelocationTotal, Position_ID)
         )
         db.get_db().commit()  # Commit the changes to the database
-        return make_response(jsonify({'success': 'User created'}), 201)
+        return make_response(jsonify({'success': 'Compensation Package created'}), 201)
     except Exception as e:
         db.get_db().rollback()  # Rollback in case of any error
-        return make_response(jsonify({'error': 'Failed to create user'}), 500)
+        return make_response(jsonify({'error': 'Failed to create Compensation Package'}), 500)
     finally:
         cursor.close()
