@@ -123,9 +123,9 @@ def get_answer_by_ID(Answer_ID):
 
 # Get answer by user id
 @answer.route('/Answer/<User_ID>', methods=['GET'])
-def get_answer_by_UID(Answer_ID):
+def get_answer_by_UID(User_ID):
     cursor = db.get_db().cursor()
-    cursor.execute('select * from Answer where Answer_ID = {0}'.format(Answer_ID))
+    cursor.execute('select * from Answer where Answer_ID = {0}'.format(User_ID))
     row_headers = [x[0] for x in cursor.description]
     json_data = []
     theData = cursor.fetchall()
