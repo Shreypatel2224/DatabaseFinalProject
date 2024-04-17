@@ -5,7 +5,7 @@ from src import db
 review = Blueprint('review', __name__)
 
 
-@review.route('/review', methods=['GET'])
+@review.route('/Review', methods=['GET'])
 def get_review():
     cursor = db.get_db().cursor()
     cursor.execute('SELECT * FROM Review')
@@ -20,7 +20,7 @@ def get_review():
     return the_response
 
 
-@review.route('/review', methods=['POST'])
+@review.route('/Review', methods=['POST'])
 def add_review():
     data = request.get_json()
     if not data:
@@ -44,8 +44,8 @@ def add_review():
             (title, date, rating, content, user_id, position_id, skills_used)
         )
         db.get_db().commit()  # commit
-        review_id = cursor.lastrowid # ge the auto incremented id 
-        return jsonify({'success': 'Review added', 'Review_ID': review_id}), 201  
+        rev_id = cursor.lastrowid # ge the auto incremented id 
+        return jsonify({'success': 'Review added', 'Review_ID': rev_id}), 201  
     except Exception as e:
         db.get_db().rollback()  # Roll back if error
         return jsonify({'error': 'Failed to add review: {}'.format(str(e))}), 500
@@ -54,10 +54,10 @@ def add_review():
 
 #----------------------------------------------------------------------------------------------------------------------------------------
 
-@review.route('/review/<review_id>', methods=['GET'])
-def get_review(review_id):
+@review.route('/Review/<Review_id>', methods=['GET'])
+def get_review(Review_id):
     cursor = db.get_db().cursor()
-    cursor.execute('select * from Review where review_id = {0}'.format(review_id))
+    cursor.execute('select * from Review where Review_id = {0}'.format(Review_id))
     row_headers = [x[0] for x in cursor.description]
     json_data = []
     theData = cursor.fetchall()
@@ -74,30 +74,30 @@ def get_review(review_id):
     return the_response
 
 
-@review.route('/review/<review_id>', methods=['DELETE'])
-def delete_review(review_id):
+@review.route('/Review/<Review_id>', methods=['DELETE'])
+def delete_review(Review_id):
     try:
         cursor = db.get_db().cursor()
-        cursor.execute('DELETE FROM Review WHERE Review_ID = %s', (review_id,))
+        cursor.execute('DELETE FROM Review WHERE Review_ID = %s', (Review_id,))
         db.get_db().commit()
         if cursor.rowcount == 0:
             return jsonify({'error': 'Review not found'}), 404
         return jsonify({'success': 'Review deleted'}), 200
     except Exception as e:
         db.get_db().rollback() 
-        return jsonify({'error': 'Failed to delete review: {}'.format(str(e))}), 500
+        return jsonify({'error': 'Failed to delete Review: {}'.format(str(e))}), 500
     finally:
         cursor.close()
 
 
-@review.route('/review/<review_id>', methods=['PUT'])
-def update_review(review_id):
+@review.route('/Review/<Review_id>', methods=['PUT'])
+def update_review(Review_id):
     data = request.get_json()
     if not data:
         return jsonify({'error': 'No data provided'}), 400
 
     cursor = db.get_db().cursor()
-    cursor.execute("SELECT * FROM Review WHERE Review_ID = %s", (review_id,))
+    cursor.execute("SELECT * FROM Review WHERE Review_ID = %s", (Review_id,))
     if cursor.rowcount == 0:
         return jsonify({'error': 'Review not found'}), 404
     updates = []
@@ -111,7 +111,7 @@ def update_review(review_id):
         return jsonify({'error': 'There were no valid fields to update'}), 400
     
     update_stmt = "UPDATE Review SET " + ", ".join(updates) + " WHERE Review_ID = %s"
-    values.append(review_id)
+    values.append(Review_id)
     
     try:
         cursor.execute(update_stmt, values)
@@ -129,13 +129,13 @@ def update_review(review_id):
 
 
 #--------------------------------------------------------------------------------------------------------------------------
-@review.route('/review/<position_id>/<cycle_id>/<company_id>', methods=['GET'])
-def get_review_by_keys(position_id, cycle_id, company_id):
+@review.route('/Review/<Position_ID>/<Cycle_ID>/<Company_ID>', methods=['GET'])
+def get_review_by_keys(Position_ID, Cycle_ID, Company_ID):
     try:
         cursor = db.get_db().cursor()
         cursor.execute(
             'SELECT * FROM Review WHERE Position_ID = %s AND CycleID = %s AND Company_ID = %s',
-            (position_id, cycle_id, company_id)
+            (Position_ID, Cycle_ID, Company_ID)
         )
         row_headers = [x[0] for x in cursor.description]
         reviews = cursor.fetchall()
@@ -144,18 +144,18 @@ def get_review_by_keys(position_id, cycle_id, company_id):
         json_data = [dict(zip(row_headers, row)) for row in reviews]
         return jsonify(json_data), 200
     except Exception as e:
-        return jsonify({'error': 'Failed to fetch reviews'}), 500
+        return jsonify({'error': 'Failed to fetch Reviews'}), 500
     finally:
         cursor.close()
 
 
-@review.route('/review/<position_id>', methods=['GET'])
-def get_review_by_keys(position_id):
+@review.route('/Review/<Position_ID>', methods=['GET'])
+def get_review_by_keys(Position_ID):
     try:
         cursor = db.get_db().cursor()
         cursor.execute(
             'SELECT * FROM Review WHERE Position_ID = %s',
-            (position_id)
+            (Position_ID)
         )
         row_headers = [x[0] for x in cursor.description]
         reviews = cursor.fetchall()
