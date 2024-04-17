@@ -4,13 +4,13 @@ from src import db
 
 
 customers = Blueprint('customers', __name__)
-compensationpackage = Blueprint('compensationpackage', __name__)
+compensationpackage = Blueprint('CompensationPackage', __name__)
 
 # Get all compensation packages from the DB
-@compensationpackage.route('/C', methods=['GET'])
+@compensationpackage.route('/CompensationPackage', methods=['GET'])
 def get_CP():
     cursor = db.get_db().cursor()
-    cursor.execute('select CPID, Perks, Hourly, BonusTotal, HousingTotal, RelocationTotal, Position_ID')
+    cursor.execute('select * From CompensationPackage')
     row_headers = [x[0] for x in cursor.description]
     json_data = []
     theData = cursor.fetchall()
@@ -22,25 +22,29 @@ def get_CP():
     return the_response
 
 
-@compensationpackage.route('/user', methods=['POST'])
-def create_user():
+# Post route to update compensation packages in the DB
+@compensationpackage.route('/CompensationPackage', methods=['POST'])
+def create_CP():
     data = request.get_json()
     if not data:
         return make_response(jsonify({'error': 'No data provided'}), 400)
     
-    username = data.get('Username')
-    user_type = data.get('User_Type')
-    password = data.get('Password')
-    email = data.get('Email')
+    CPID = data.get('CPID')
+    Perks = data.get('Perks')
+    Hourly = data.get('Hourly')
+    BonusTotal = data.get('BonusTotal')
+    HousingTotal = data.get('HousingTotal')
+    RelocationTotal = data.get('RelocationTotal')
+    Position_ID = data.get('Position_ID')
     
-    if not all([username, user_type, password, email]):
+    if not all([CPID, Perks, Hourly, BonusTotal, HousingTotal, RelocationTotal, Position_ID]):
         return make_response(jsonify({'error': 'Missing data'}), 400)
     
     try:
         cursor = db.get_db().cursor()
         cursor.execute(
-            'INSERT INTO User (Username, User_Type, Password, Email) VALUES (%s, %s, %s, %s)',
-            (username, user_type, password, email)
+            'INSERT INTO CompensationPackage (CPID, Perks, Hourly, BonusTotal, HousingTotal, RelocationTotal, Position_I) VALUES (%s, %s, %s, %s, %s, %s, %s)',
+            (CPID, Perks, Hourly, BonusTotal, HousingTotal, RelocationTotal, Position_ID)
         )
         db.get_db().commit()  # Commit the changes to the database
         return make_response(jsonify({'success': 'User created'}), 201)
