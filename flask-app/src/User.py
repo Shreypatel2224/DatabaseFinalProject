@@ -109,43 +109,6 @@ def get_user2(Username):
     return the_response
 
 
-# @user.route('/User/<User_ID>', methods=['PUT'])
-# def update_user(User_ID):
-#     data = request.get_json()
-#     if not data:
-#         return jsonify({'error': 'No data provided'}), 400
-
-#     cursor = db.get_db().cursor()
-#     cursor.execute("SELECT * FROM User WHERE User_ID = %s", (User_ID,))
-#     if cursor.rowcount == 0:
-#         return jsonify({'error': 'User not found'}), 404
-#     updates = []
-#     values = []
-#     for field in ['Username', 'UserType', 'Password', 'Email']:
-#         if field in data:
-#             updates.append(f"{field} = %s")
-#             values.append(data[field])
-    
-#     if not updates:
-#         return jsonify({'error': 'There were no valid fields to update'}), 400
-    
-#     update_stmt = "UPDATE User SET " + ", ".join(updates) + " WHERE User_ID = %s"
-#     values.append(User_ID)
-    
-#     try:
-#         cursor.execute(update_stmt, values)
-#         if cursor.rowcount == 0:
-#             db.get_db().rollback()
-#             return jsonify({'error': 'No User updated'}), 400
-#         else:
-#             db.get_db().commit()
-#             return jsonify({'message': 'User updated successfully'}), 200
-#     except Exception as e:
-#         db.get_db().rollback()
-#         return jsonify({'error': str(e)}), 500
-
-
-
 @user.route('/User/<User_ID>', methods=['PUT'])
 def update_user(User_ID):
     data = request.get_json()
