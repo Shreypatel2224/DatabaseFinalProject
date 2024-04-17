@@ -33,12 +33,12 @@ def create_app():
         return "<h1>Welcome to the 3200 boilerplate app</h1>"
 
     # Import the various Beluprint Objects
-    from src.User.User import User
-    from src.CompensationPackage.CompensationPackage import CompensationPackage
-    from src.Question.Question import Question
-    from src.Review.Review import Review
-    from src.Answer.Answer import Answer
-    from src.CoopCycle.CoopCycle import CoopCycle
+    from src.User import User
+    from src.CompensationPackage import CompensationPackage
+    from src.Question import Question
+    from src.Review import Review
+    from src.Answer import Answer
+    from src.CoopCycle import CoopCycle
 
 
 
