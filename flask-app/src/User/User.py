@@ -2,8 +2,6 @@ from flask import Blueprint, request, jsonify, make_response
 import json
 from src import db
 
-
-customers = Blueprint('customers', __name__)
 user = Blueprint('User', __name__)
 
 
