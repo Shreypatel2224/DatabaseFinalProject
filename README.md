@@ -1,3 +1,8 @@
+# Project Overview
+Co-Op Connect is an innovative web platform designed to enhance the co-op education experience by facilitating transparent sharing of reviews and insights from students and recruiters. It allows users to post and access detailed feedback on various co-op positions, including aspects like job roles, skills involved, work environment, hourly pay, and more. The site features an intuitive interface with advanced search and filtering capabilities, making it easy for users to find relevant information based on company and specific role. By providing a centralized space for honest reviews and compensation transparency, Co-Op Connect aims to empower students and recruiters to make informed decisions and foster a supportive community around co-operative education.
+
+
+
 # MySQL + Flask Boilerplate Project
 
 This repo contains a boilerplate setup for spinning up 3 Docker containers: 
