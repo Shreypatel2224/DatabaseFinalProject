@@ -100,7 +100,8 @@ def update_user(CycleID):
         UPDATE CoopCycle
         SET Year = %s,
             PlacementRate = %s,
-            Type = %s,
+            Type = %s
+            
         WHERE CycleID = %s
     '''
     cursor.execute(query, (Year, PlacementRate, Type, CycleID))

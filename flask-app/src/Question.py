@@ -65,7 +65,7 @@ def delete_question(Question_ID):
         return make_response(jsonify({'error': 'Failed to delete Question'}), 500)
     finally:
         cursor.close()
-        
+
 
 @question.route('/Question/<Question_ID>', methods=['PUT'])
 def update_question(Question_ID):
@@ -83,8 +83,9 @@ def update_question(Question_ID):
         SET Title = %s,
             Date = %s,
             Status = %s,
-            Content = %s
+            Content = %s,
             User_ID = %s
+            
         WHERE Question_ID = %s
     '''
     cursor.execute(query, (Title, Date, Status, Content, User_ID, Question_ID))
