@@ -5,28 +5,10 @@ from src import db
 review = Blueprint('review', __name__)
 
 
-review = Blueprint('review', __name__)
-
 @review.route('/review', methods=['GET'])
 def get_review():
-    try:
-        cursor = db.get_db().cursor()
-        cursor.execute('SELECT * FROM Review')
-        row_headers = [x[0] for x in cursor.description]
-        reviews = cursor.fetchall()
-        json_data = [dict(zip(row_headers, row)) for row in reviews]
-        return jsonify(json_data), 200
-    except Exception as e:
-        return jsonify({'error': 'Failed to fetch reviews'}), 500
-    finally:
-        cursor.close()
-
-
-# Get all users from the DB
-@user.route('/user', methods=['GET'])
-def get_users():
     cursor = db.get_db().cursor()
-    cursor.execute('select User_ID, Username, User_Type, Password, Email')
+    cursor.execute('SELECT * FROM Review')
     row_headers = [x[0] for x in cursor.description]
     json_data = []
     theData = cursor.fetchall()
