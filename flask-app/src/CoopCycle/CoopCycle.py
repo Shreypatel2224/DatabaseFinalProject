@@ -5,7 +5,7 @@ from src import db
 
 coopcycle = Blueprint('CoopCycle', __name__)
 
-# Get all coop cycles from the DB
+# Get all coop cycles from the db
 @coopcycle.route('/CoopCycle', methods=['GET'])
 def get_coopcycle():
     cursor = db.get_db().cursor()
