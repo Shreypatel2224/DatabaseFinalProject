@@ -112,7 +112,7 @@ def update_user2(Review_ID):
             Content = %s,
             User_ID = %s,
             Position_ID = %s,
-            SkillsUsed = %s,
+            SkillsUsed = %s
         WHERE Review_ID = %s
     '''
     cursor.execute(query, (Title, Date, Rating, Content, User_ID, Position_ID, SkillsUsed, Review_ID))

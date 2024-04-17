@@ -87,6 +87,28 @@ def update_CoopCycle(CycleID):
         return jsonify({'error': str(e)}), 500
 
 
+@coopcycle.route('/CoopCycle/<CycleID>', methods=['PUT'])
+def update_user(CycleID):
+    data = request.get_json()
+    cursor = db.get_db().cursor()
+
+    Year = data.get('Year')
+    PlacementRate = data.get('User_Type')
+    Type = data.get('Password')
+
+    query = '''
+        UPDATE CoopCycle
+        SET Year = %s,
+            PlacementRate = %s,
+            Type = %s,
+        WHERE CycleID = %s
+    '''
+    cursor.execute(query, (Year, PlacementRate, Type, CycleID))
+    db.get_db().commit()
+    return jsonify({'success': True, 'message': 'User updated successfully'}), 200
+
+
+
 #deletes a coop cycle based on its given ID
 @coopcycle.route('/CoopCycle/<CycleID>', methods=['DELETE'])
 def delete_CC(CycleID):
