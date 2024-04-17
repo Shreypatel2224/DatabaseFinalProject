@@ -1,6 +1,6 @@
 version: "3.9"
 
-# We are setting up 2 or 3 services: Benoit, parth, aahil2, jason test
+# We are setting up 2 or 3 services: Benoit, parth, aahil2, jason
 # - web container for the Flask application
 # - db container for mysql
 # - appsmith container for appsmith
