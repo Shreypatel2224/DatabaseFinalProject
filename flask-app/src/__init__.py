@@ -42,7 +42,7 @@ def create_app():
 
 
 
-    # Register the routes from each Blueprint with the app object thing
+    # Register the routes from each Blueprint with the app object 
     # and give a url prefix to each
     app.register_blueprint(CompensationPackage,   url_prefix='/cp')
     app.register_blueprint(Question,   url_prefix='/q')
