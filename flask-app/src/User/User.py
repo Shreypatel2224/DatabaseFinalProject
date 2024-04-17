@@ -6,7 +6,7 @@ user = Blueprint('User', __name__)
 
 
 # Get all users from the DB
-@user.route('/user', methods=['GET'])
+@user.route('/User', methods=['GET'])
 def get_users():
     cursor = db.get_db().cursor()
     cursor.execute('select User_ID, Username, User_Type, Password, Email FROM User')
@@ -21,7 +21,7 @@ def get_users():
     return the_response
 
 
-@user.route('/user', methods=['POST'])
+@user.route('/User', methods=['POST'])
 def create_user():
     data = request.get_json()
     if not data:
@@ -50,17 +50,17 @@ def create_user():
         cursor.close()
 
 
-@user.route('/user/<user_id>', methods=['DELETE'])
-def delete_user(user_id):
+@user.route('/User/<User_ID>', methods=['DELETE'])
+def delete_user(User_ID):
     try:
         cursor = db.get_db().cursor()
-        cursor.execute('DELETE FROM User WHERE User_ID = %s', (user_id,))
+        cursor.execute('DELETE FROM User WHERE User_ID = %s', (User_ID,))
         db.get_db().commit()
         if cursor.rowcount == 0:
             return make_response(jsonify({'error': 'User not found'}), 404)
         return make_response(jsonify({'success': 'User deleted'}), 200)
     except Exception as e:
         db.get_db().rollback()
-        return make_response(jsonify({'error': 'Failed to delete user'}), 500)
+        return make_response(jsonify({'error': 'Failed to delete User'}), 500)
     finally:
         cursor.close()
