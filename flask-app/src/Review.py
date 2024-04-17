@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify, make_response, current_app
 import json
+from datetime import datetime
 from src import db
 
 review = Blueprint('review', __name__)
@@ -98,6 +99,8 @@ def update_user2(Review_ID):
 
     Title = data.get('Title')
     Date = data.get('Date')
+    if Date:
+        Date = datetime.strptime(Date, '%a, %d %b %Y %H:%M:%S GMT').strftime('%Y-%m-%d')
     Rating = data.get('Rating')
     Content = data.get('Content')
     User_ID = data.get('User_ID')
