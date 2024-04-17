@@ -57,7 +57,7 @@ def add_review():
 @review.route('/review/<review_id>', methods=['GET'])
 def get_review(review_id):
     cursor = db.get_db().cursor()
-    cursor.execute('select * from Review where id = {0}'.format(review_id))
+    cursor.execute('select * from Review where review_id = {0}'.format(review_id))
     row_headers = [x[0] for x in cursor.description]
     json_data = []
     theData = cursor.fetchall()
@@ -129,13 +129,33 @@ def update_review(review_id):
 
 
 #--------------------------------------------------------------------------------------------------------------------------
-@review.route('/review/<int:position_id>/<int:cycle_id>/<int:company_id>', methods=['GET'])
+@review.route('/review/<position_id>/<cycle_id>/<company_id>', methods=['GET'])
 def get_review_by_keys(position_id, cycle_id, company_id):
     try:
         cursor = db.get_db().cursor()
         cursor.execute(
             'SELECT * FROM Review WHERE Position_ID = %s AND CycleID = %s AND Company_ID = %s',
             (position_id, cycle_id, company_id)
+        )
+        row_headers = [x[0] for x in cursor.description]
+        reviews = cursor.fetchall()
+        if not reviews:
+            return jsonify({'message': 'No reviews found'}), 404
+        json_data = [dict(zip(row_headers, row)) for row in reviews]
+        return jsonify(json_data), 200
+    except Exception as e:
+        return jsonify({'error': 'Failed to fetch reviews'}), 500
+    finally:
+        cursor.close()
+
+
+@review.route('/review/<position_id>', methods=['GET'])
+def get_review_by_keys(position_id):
+    try:
+        cursor = db.get_db().cursor()
+        cursor.execute(
+            'SELECT * FROM Review WHERE Position_ID = %s',
+            (position_id)
         )
         row_headers = [x[0] for x in cursor.description]
         reviews = cursor.fetchall()
