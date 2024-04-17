@@ -65,41 +65,33 @@ def delete_answer(Answer_ID):
     finally:
         cursor.close()
 
-# update answer by answer id
 @answer.route('/Answer/<Answer_ID>', methods=['PUT'])
 def update_answer(Answer_ID):
     data = request.get_json()
-    if not data:
-        return jsonify({'error': 'No data provided'}), 400
-
     cursor = db.get_db().cursor()
-    cursor.execute("SELECT * FROM Answer WHERE Answer_ID = %s", (Answer_ID,))
-    if cursor.rowcount == 0:
-        return jsonify({'error': 'Answer not found'}), 404
-    updates = []
-    values = []
-    for field in ['Question_ID', 'Date', 'Content', 'User_ID']:
-        if field in data:
-            updates.append(f"{field} = %s")
-            values.append(data[field])
-    
-    if not updates:
-        return jsonify({'error': 'There were no valid fields to update'}), 400
-    
-    update_stmt = "UPDATE Answer SET " + ", ".join(updates) + " WHERE Answer_ID = %s"
-    values.append(Answer_ID)
 
-    try:
-        cursor.execute(update_stmt, values)
-        if cursor.rowcount == 0:
-            db.get_db().rollback()
-            return jsonify({'error': 'No Answer updated'}), 400
-        else:
-            db.get_db().commit()
-            return jsonify({'message': 'Answer updated successfully'}), 200
-    except Exception as e:
-        db.get_db().rollback()
-        return jsonify({'error': str(e)}), 500
+    Content = data.get('Content')
+    Date = data.get('Date')
+    if Date:
+        Date = datetime.strptime(Date, '%a, %d %b %Y %H:%M:%S GMT').strftime('%Y-%m-%d')
+    User_ID = data.get('User_ID')
+    Question_ID = data.get('Question_ID')
+
+    query = '''
+        UPDATE Answer
+        SET Content = %s,
+            Date = %s,
+            User_ID = %s,
+            Question_ID = %s
+
+        WHERE Answer_ID = %s
+    '''
+    cursor.execute(query, (Content, Date, User_ID, Question_ID, Answer_ID))
+    db.get_db().commit()
+    return jsonify({'success': True, 'message': 'User updated successfully'}), 200
+
+
+
 
 # Get answer by answer id
 @answer.route('/Answer/<Answer_ID>', methods=['GET'])

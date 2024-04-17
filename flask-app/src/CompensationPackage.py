@@ -75,41 +75,39 @@ def delete_CP(CPID):
     finally:
         cursor.close()
 
-# Update compensation package by CPID
-@compensationpackage.route('/CompensationPackage/<CPID>', methods=['PUT'])
-def update_CP(CPID):
-    data = request.get_json()
-    if not data:
-        return jsonify({'error': 'No data provided'}), 400
 
+@compensationpackage.route('/CompensationPackage/<CPID>', methods=['PUT'])
+def update_question(CPID):
+    data = request.get_json()
     cursor = db.get_db().cursor()
-    cursor.execute("SELECT * FROM CompensationPackage WHERE CPID = %s", (CPID,))
-    if cursor.rowcount == 0:
-        return jsonify({'error': 'CompensationPackage not found'}), 404
-    updates = []
-    values = []
-    for field in ['Perks', 'Hourly', 'BonusTotal', 'HousingTotal', 'RelocationTotal', 'Position_ID']:
-        if field in data:
-            updates.append(f"{field} = %s")
-            values.append(data[field])
-    
-    if not updates:
-        return jsonify({'error': 'There were no valid fields to update'}), 400
-    
-    update_stmt = "UPDATE CompensationPackage SET " + ", ".join(updates) + " WHERE CPID = %s"
-    values.append(CPID)
-    
-    try:
-        cursor.execute(update_stmt, values)
-        if cursor.rowcount == 0:
-            db.get_db().rollback()
-            return jsonify({'error': 'No CompensationPackage updated'}), 400
-        else:
-            db.get_db().commit()
-            return jsonify({'message': 'CompensationPackage updated successfully'}), 200
-    except Exception as e:
-        db.get_db().rollback()
-        return jsonify({'error': str(e)}), 500
+
+    Perks = data.get('Perks')
+    Hourly = data.get('Hourly')
+    BonusTotal = data.get('BonusTotal')
+    HousingTotal = data.get('HousingTotal')
+    RelocationTotal = data.get('RelocationTotal')
+    HousingID = data.get('HousingID')
+
+    query = '''
+        UPDATE CompensationPackage
+        SET Perks = %s,
+            Hourly = %s,
+            BonusTotal = %s,
+            HousingTotal = %s,
+            RelocationTotal = %s,
+            HousingID = %s
+
+        WHERE CPID = %s
+    '''
+    cursor.execute(query, (Perks, Hourly, BonusTotal, HousingTotal, RelocationTotal, HousingID, CPID))
+    db.get_db().commit()
+    return jsonify({'success': True, 'message': 'User updated successfully'}), 200
+
+
+
+
+
+
 
 # Get compensation package by bonus total
 @compensationpackage.route('/CompensationPackage/<BonusTotal>', methods=['GET'])

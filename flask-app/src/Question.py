@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify, make_response, current_app
 import json
+from datetime import datetime
 from src import db
 
 
@@ -66,41 +67,35 @@ def delete_question(Question_ID):
     finally:
         cursor.close()
 
-# Update question by question id
+
 @question.route('/Question/<Question_ID>', methods=['PUT'])
 def update_question(Question_ID):
     data = request.get_json()
-    if not data:
-        return jsonify({'error': 'No data provided'}), 400
-
     cursor = db.get_db().cursor()
-    cursor.execute("SELECT * FROM Question WHERE Question_ID = %s", (Question_ID,))
-    if cursor.rowcount == 0:
-        return jsonify({'error': 'Question not found'}), 404
-    updates = []
-    values = []
-    for field in ['Title', 'Date', 'Status', 'Content', 'User_ID']:
-        if field in data:
-            updates.append(f"{field} = %s")
-            values.append(data[field])
-    
-    if not updates:
-        return jsonify({'error': 'There were no valid fields to update'}), 400
-    
-    update_stmt = "UPDATE Question SET " + ", ".join(updates) + " WHERE Question_ID = %s"
-    values.append(Question_ID)
 
-    try:
-        cursor.execute(update_stmt, values)
-        if cursor.rowcount == 0:
-            db.get_db().rollback()
-            return jsonify({'error': 'No Question updated'}), 400
-        else:
-            db.get_db().commit()
-            return jsonify({'message': 'Question updated successfully'}), 200
-    except Exception as e:
-        db.get_db().rollback()
-        return jsonify({'error': str(e)}), 500
+    Title = data.get('Title')
+    Date = data.get('Date')
+    if Date:
+        Date = datetime.strptime(Date, '%a, %d %b %Y %H:%M:%S GMT').strftime('%Y-%m-%d')
+
+    Status = data.get('Status')
+    Content = data.get('Content')
+    User_ID = data.get('User_ID')
+
+    query = '''
+        UPDATE Question
+        SET Title = %s,
+            Date = %s,
+            Status = %s,
+            Content = %s,
+            User_ID = %s
+
+        WHERE Question_ID = %s
+    '''
+    cursor.execute(query, (Title, Date, Status, Content, User_ID, Question_ID))
+    db.get_db().commit()
+    return jsonify({'success': True, 'message': 'User updated successfully'}), 200
+
 
 # Get question by question id
 @question.route('/Question/<Question_ID>', methods=['GET'])
