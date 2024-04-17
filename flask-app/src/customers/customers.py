@@ -8,6 +8,7 @@ from src import db
 
 
 customers = Blueprint('customers', __name__)
+User = Blueprint('User', __name__)
 
 # Get all customers from the DB
 @customers.route('/customers', methods=['GET'])
@@ -39,3 +40,32 @@ def get_customer(userID):
     the_response.status_code = 200
     the_response.mimetype = 'application/json'
     return the_response
+
+
+
+# from flask import Blueprint, request, jsonify
+
+# user_blueprint = Blueprint('User', __name__)
+
+# @user_blueprint.route('/User', methods=['GET'])
+# def get_users():
+#     users = get_all_users()  # You need to define this function
+#     return jsonify(users), 200
+
+# @user_blueprint.route('/User', methods=['POST'])
+# def add_user():
+#     data = request.json
+#     if not data:
+#         return jsonify({'error': 'No input data provided'}), 400
+#     new_user = create_user(data)  # You need to define this function
+#     return jsonify(new_user), 201
+
+# @user_blueprint.route('/User/<int:user_id>', methods=['DELETE'])
+# def delete_user(user_id):
+#     result = delete_user_by_id(user_id)  # You need to define this function
+#     if result:
+#         return jsonify({'success': 'User deleted'}), 200
+#     else:
+#         return jsonify({'error': 'User not found'}), 404
+
+
