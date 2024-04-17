@@ -54,10 +54,10 @@ def add_review():
 
 #----------------------------------------------------------------------------------------------------------------------------------------
 
-@review.route('/Review/<Review_id>', methods=['GET'])
-def get_review(Review_id):
+@review.route('/Review/<Review_ID>', methods=['GET'])
+def get_review(Review_ID):
     cursor = db.get_db().cursor()
-    cursor.execute('select * from Review where Review_id = {0}'.format(Review_id))
+    cursor.execute('select * from Review where Review_ID = {0}'.format(Review_ID))
     row_headers = [x[0] for x in cursor.description]
     json_data = []
     theData = cursor.fetchall()
@@ -74,11 +74,11 @@ def get_review(Review_id):
     return the_response
 
 
-@review.route('/Review/<Review_id>', methods=['DELETE'])
-def delete_review(Review_id):
+@review.route('/Review/<Review_ID>', methods=['DELETE'])
+def delete_review(Review_ID):
     try:
         cursor = db.get_db().cursor()
-        cursor.execute('DELETE FROM Review WHERE Review_ID = %s', (Review_id,))
+        cursor.execute('DELETE FROM Review WHERE Review_ID = %s', (Review_ID,))
         db.get_db().commit()
         if cursor.rowcount == 0:
             return jsonify({'error': 'Review not found'}), 404
@@ -91,13 +91,13 @@ def delete_review(Review_id):
 
 
 @review.route('/Review/<Review_ID>', methods=['PUT'])
-def update_review(Review_id):
+def update_review(Review_ID):
     data = request.get_json()
     if not data:
         return jsonify({'error': 'No data provided'}), 400
 
     cursor = db.get_db().cursor()
-    cursor.execute("SELECT * FROM Review WHERE Review_ID = %s", (Review_id,))
+    cursor.execute("SELECT * FROM Review WHERE Review_ID = %s", (Review_ID,))
     if cursor.rowcount == 0:
         return jsonify({'error': 'Review not found'}), 404
     updates = []
@@ -111,7 +111,7 @@ def update_review(Review_id):
         return jsonify({'error': 'There were no valid fields to update'}), 400
     
     update_stmt = "UPDATE Review SET " + ", ".join(updates) + " WHERE Review_ID = %s"
-    values.append(Review_id)
+    values.append(Review_ID)
     
     try:
         cursor.execute(update_stmt, values)
