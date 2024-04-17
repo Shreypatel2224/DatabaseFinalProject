@@ -3,7 +3,6 @@ import json
 from src import db
 
 
-customers = Blueprint('customers', __name__)
 compensationpackage = Blueprint('CompensationPackage', __name__)
 
 # Get all compensation packages from the DB
@@ -23,7 +22,7 @@ def get_CP():
 
 
 # Post route to update compensation packages in the DB
-@compensationpackage.route('/CompensationPackage', methods=['POST'])
+@compensationpackage.route('/CompensationPackage/<Position_ID>', methods=['POST'])
 def create_CP():
     data = request.get_json()
     if not data:
