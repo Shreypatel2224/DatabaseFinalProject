@@ -131,7 +131,7 @@ def get_CP_by_BT(BonusTotal):
     the_response.mimetype = 'application/json'
     return the_response
 
-# Get compensation package by hourly rate
+# Get compensation package by the hourly rate
 @compensationpackage.route('/CompensationPackage/<Hourly>', methods=['GET'])
 def get_CP_by_hourly(Hourly):
     cursor = db.get_db().cursor()
