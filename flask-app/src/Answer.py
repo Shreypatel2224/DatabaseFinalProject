@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify, make_response
 import json
+from datetime import datetime
 from src import db
 
 
@@ -29,6 +30,9 @@ def create_answer():
     
     question_id = data.get('Question_ID')
     date = data.get('Date')
+    if date:
+        date = datetime.strptime(date, '%a, %d %b %Y %H:%M:%S GMT').strftime('%Y-%m-%d')
+
     content = data.get('Content')
     user_id = data.get('User_ID')
     

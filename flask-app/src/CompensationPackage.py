@@ -66,7 +66,7 @@ def create_CP():
     try:
         cursor = db.get_db().cursor()
         cursor.execute(
-            'INSERT INTO CompensationPackage (Perks, Hourly, BonusTotal, HousingTotal, RelocationTotal, Position_I) VALUES (%s, %s, %s, %s, %s, %s)',
+            'INSERT INTO CompensationPackage (Perks, Hourly, BonusTotal, HousingTotal, RelocationTotal, Position_ID) VALUES (%s, %s, %s, %s, %s, %s)',
             (Perks, Hourly, BonusTotal, HousingTotal, RelocationTotal, Position_ID)
         )
         db.get_db().commit()  # Commit the changes to the database
