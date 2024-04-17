@@ -125,7 +125,7 @@ def get_CoopCycleByID(CycleID):
 
 
 @coopcycle.route('/CoopCycle/<Type>', methods=['GET'])
-def get_CoopCycleByID(Type):
+def get_CoopCycleByType(Type):
     cursor = db.get_db().cursor()
     cursor.execute('select * from CoopCycle where CycleID = {0}'.format(Type))
     row_headers = [x[0] for x in cursor.description]
