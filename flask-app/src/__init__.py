@@ -33,7 +33,7 @@ def create_app():
         return "<h1>Welcome to the 3200 boilerplate app</h1>"
 
     # Import the various Beluprint Objects
-    from src.User import User
+    from src.User import user
     from src.CompensationPackage import CompensationPackage
     from src.Question import Question
     from src.Review import Review
@@ -46,7 +46,7 @@ def create_app():
     # and give a url prefix to each
     app.register_blueprint(CompensationPackage,   url_prefix='/cp')
     app.register_blueprint(Question,   url_prefix='/q')
-    app.register_blueprint(User,   url_prefix='/u')
+    app.register_blueprint(user,   url_prefix='/u')
     app.register_blueprint(Review,   url_prefix='/r')
     app.register_blueprint(Answer,   url_prefix='/a')
     app.register_blueprint(CoopCycle,   url_prefix='/cc')
