@@ -20,6 +20,7 @@ def get_question():
     the_response.mimetype = 'application/json'
     return the_response
 
+# Post route to add a question
 @question.route('/Question', methods=['POST'])
 def create_question():
     data = request.get_json()
