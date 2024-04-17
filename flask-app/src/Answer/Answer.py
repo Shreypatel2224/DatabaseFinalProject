@@ -3,13 +3,13 @@ import json
 from src import db
 
 
-question = Blueprint('Question', __name__)
+answer = Blueprint('Answer', __name__)
 
-# Get all question from the DB
-@question.route('/Question', methods=['GET'])
-def get_question():
+# Get all answers from the DB
+@answer.route('/Answer', methods=['GET'])
+def get_answer():
     cursor = db.get_db().cursor()
-    cursor.execute('select * From Question')
+    cursor.execute('select * From Answer')
     row_headers = [x[0] for x in cursor.description]
     json_data = []
     theData = cursor.fetchall()
@@ -20,33 +20,33 @@ def get_question():
     the_response.mimetype = 'application/json'
     return the_response
 
-@question.route('/Question', methods=['POST'])
-def create_question():
+# Post route to make new answer
+@answer.route('/Answer', methods=['POST'])
+def create_answer():
     data = request.get_json()
     if not data:
         return make_response(jsonify({'error': 'No data provided'}), 400)
     
+    answer_id = data.get('Answer_ID')
     question_id = data.get('Question_ID')
-    title = data.get('Title')
     date = data.get('Date')
-    status = data.get('Status')
     content = data.get('Content')
     user_id = data.get('User_ID')
     
-    if not all([question_id, title, date, status, content, user_id]):
+    if not all([answer_id, question_id, date, content, user_id]):
         return make_response(jsonify({'error': 'Missing data'}), 400)
     
     try:
         cursor = db.get_db().cursor()
         cursor.execute(
-            'INSERT INTO Question (Question_ID, Title, Date, Status, Content, User_ID) VALUES (%s, %s, %s, %s, %s, %s)',
-            (question_id, title, date, status, content, user_id)
+            'INSERT INTO Answer (Answer_ID, Content, Date, User_ID, Question_ID) VALUES (%s, %s, %s, %s, %s)',
+            (answer_id, content, date, user_id, question_id)
         )
         db.get_db().commit()  # Commit the changes to the database
-        return make_response(jsonify({'success': 'Question created'}), 201)
+        return make_response(jsonify({'success': 'Answer created'}), 201)
     except Exception as e:
         db.get_db().rollback()  # Rollback in case of any error
-        return make_response(jsonify({'error': 'Failed to create Question'}), 500)
+        return make_response(jsonify({'error': 'Failed to create Answer'}), 500)
     finally:
         cursor.close()
 
