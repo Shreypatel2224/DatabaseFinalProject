@@ -86,6 +86,26 @@ def delete_user(User_ID):
     finally:
         cursor.close()
 
+#get user with certain username
+@user.route('/User/<Username>', methods=['GET'])
+def get_user(Username):
+    cursor = db.get_db().cursor()
+    cursor.execute('select * from User where User_ID = {0}'.format(Username))
+    row_headers = [x[0] for x in cursor.description]
+    json_data = []
+    theData = cursor.fetchall()
+    for row in theData:
+        row = (dict(zip(row_headers, row)))
+        for key, value in row.items():
+            if isinstance(value, bytes): 
+                row[key] = value.decode('utf-8')
+        json_data.append(row)
+
+    the_response = make_response(jsonify(json_data))
+    the_response.status_code = 200
+    the_response.mimetype = 'application/json'
+    return the_response
+
 
 @user.route('/User/<User_ID>', methods=['PUT'])
 def update_user(User_ID):
