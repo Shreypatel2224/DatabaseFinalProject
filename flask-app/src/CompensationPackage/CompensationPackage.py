@@ -29,7 +29,6 @@ def get_CP(Position_ID):
 
 
 
-
 # Post route to update compensation packages in the DB
 @compensationpackage.route('/CompensationPackage', methods=['POST'])
 def create_CP():
