@@ -50,58 +50,21 @@ def add_CoopCycle():
         cursor.close() 
 
 
-#updates a CoopCycle
-@coopcycle.route('/CoopCycle/<CycleID>', methods=['PUT'])
-def update_CoopCycle(CycleID):
-    data = request.get_json()
-    if not data:
-        return jsonify({'error': 'No data provided'}), 400
-
-    cursor = db.get_db().cursor()
-    cursor.execute("SELECT * FROM CoopCycle WHERE CycleID = %s", (CycleID,))
-    if cursor.rowcount == 0:
-        return jsonify({'error': 'CC not found'}), 404
-    updates = []
-    values = []
-    for field in ['Year', 'PlacementRate', 'Type']:
-        if field in data:
-            updates.append(f"{field} = %s")
-            values.append(data[field])
-    
-    if not updates:
-        return jsonify({'error': 'There were no valid fields to update'}), 400
-    
-    update_stmt = "UPDATE CoopCycle SET " + ", ".join(updates) + " WHERE CycleID = %s"
-    values.append(CycleID)
-    
-    try:
-        cursor.execute(update_stmt, values)
-        if cursor.rowcount == 0:
-            db.get_db().rollback()
-            return jsonify({'error': 'No CC updated'}), 400
-        else:
-            db.get_db().commit()
-            return jsonify({'message': 'CC updated successfully'}), 200
-    except Exception as e:
-        db.get_db().rollback()
-        return jsonify({'error': str(e)}), 500
-
-
 @coopcycle.route('/CoopCycle/<CycleID>', methods=['PUT'])
 def update_user(CycleID):
     data = request.get_json()
     cursor = db.get_db().cursor()
 
     Year = data.get('Year')
-    PlacementRate = data.get('User_Type')
-    Type = data.get('Password')
+    PlacementRate = data.get('PlacementRate')
+    Type = data.get('Type')
 
     query = '''
         UPDATE CoopCycle
         SET Year = %s,
             PlacementRate = %s,
             Type = %s
-            
+
         WHERE CycleID = %s
     '''
     cursor.execute(query, (Year, PlacementRate, Type, CycleID))

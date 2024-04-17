@@ -101,6 +101,34 @@ def update_answer(Answer_ID):
         db.get_db().rollback()
         return jsonify({'error': str(e)}), 500
 
+@answer.route('/Answer/<Answer_ID>', methods=['PUT'])
+def update_answer(Answer_ID):
+    data = request.get_json()
+    cursor = db.get_db().cursor()
+
+    Content = data.get('Content')
+    Date = data.get('Date')
+    if Date:
+        Date = datetime.strptime(Date, '%a, %d %b %Y %H:%M:%S GMT').strftime('%Y-%m-%d')
+    User_ID = data.get('User_ID')
+    Question_ID = data.get('Question_ID')
+
+    query = '''
+        UPDATE Answer
+        SET Content = %s,
+            Date = %s,
+            User_ID = %s,
+            Question_ID = %s
+
+        WHERE Answer_ID = %s
+    '''
+    cursor.execute(query, (Content, Date, User_ID, Question_ID, Answer_ID))
+    db.get_db().commit()
+    return jsonify({'success': True, 'message': 'User updated successfully'}), 200
+
+
+
+
 # Get answer by answer id
 @answer.route('/Answer/<Answer_ID>', methods=['GET'])
 def get_answer_by_ID(Answer_ID):
