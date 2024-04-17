@@ -90,43 +90,34 @@ def delete_review(Review_ID):
         cursor.close()
 
 
+
 @review.route('/Review/<Review_ID>', methods=['PUT'])
-def update_review(Review_ID):
+def update_user2(Review_ID):
     data = request.get_json()
-    if not data:
-        return jsonify({'error': 'No data provided'}), 400
-
     cursor = db.get_db().cursor()
-    cursor.execute("SELECT * FROM Review WHERE Review_ID = %s", (Review_ID,))
-    if cursor.rowcount == 0:
-        return jsonify({'error': 'Review not found'}), 404
-    updates = []
-    values = []
-    for field in ['Title', 'Date', 'Rating', 'Content', 'User_ID', 'Position_ID', 'SkillsUsed', ]:
-        if field in data:
-            updates.append(f"{field} = %s")
-            values.append(data[field])
-    
-    if not updates:
-        return jsonify({'error': 'There were no valid fields to update'}), 400
-    
-    update_stmt = "UPDATE Review SET " + ", ".join(updates) + " WHERE Review_ID = %s"
-    values.append(Review_ID)
-    
-    try:
-        cursor.execute(update_stmt, values)
-        if cursor.rowcount == 0:
-            db.get_db().rollback()
-            return jsonify({'error': 'No Review updated'}), 400
-        else:
-            db.get_db().commit()
-            return jsonify({'message': 'Review updated successfully'}), 200
-    except Exception as e:
-        db.get_db().rollback()
-        return jsonify({'error': str(e)}), 500
 
+    Title = data.get('Title')
+    Date = data.get('Date')
+    Rating = data.get('Rating')
+    Content = data.get('Content')
+    User_ID = data.get('User_ID')
+    Position_ID = data.get('Position_ID')
+    SkillsUsed = data.get('SkillsUsed')
 
-
+    query = '''
+        UPDATE Review
+        SET Title = %s,
+            Date = %s,
+            Rating = %s,
+            Content = %s,
+            User_ID = %s,
+            Position_ID = %s,
+            SkillsUsed = %s,
+        WHERE Review_ID = %s
+    '''
+    cursor.execute(query, (Title, Date, Rating, Content, User_ID, Position_ID, SkillsUsed, Review_ID))
+    db.get_db().commit()
+    return jsonify({'success': True, 'message': 'User updated successfully'}), 200
 
 #--------------------------------------------------------------------------------------------------------------------------
 @review.route('/Review/<Position_ID>/<Cycle_ID>/<Company_ID>', methods=['GET'])
