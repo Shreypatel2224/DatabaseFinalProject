@@ -27,20 +27,19 @@ def create_answer():
     if not data:
         return make_response(jsonify({'error': 'No data provided'}), 400)
     
-    answer_id = data.get('Answer_ID')
     question_id = data.get('Question_ID')
     date = data.get('Date')
     content = data.get('Content')
     user_id = data.get('User_ID')
     
-    if not all([answer_id, question_id, date, content, user_id]):
+    if not all([content, date, user_id, question_id]):
         return make_response(jsonify({'error': 'Missing data'}), 400)
     
     try:
         cursor = db.get_db().cursor()
         cursor.execute(
-            'INSERT INTO Answer (Answer_ID, Content, Date, User_ID, Question_ID) VALUES (%s, %s, %s, %s, %s)',
-            (answer_id, content, date, user_id, question_id)
+            'INSERT INTO Answer (Content, Date, User_ID, Question_ID) VALUES (%s, %s, %s, %s)',
+            (content, date, user_id, question_id)
         )
         db.get_db().commit()  # Commit the changes to the database
         return make_response(jsonify({'success': 'Answer created'}), 201)
