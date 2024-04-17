@@ -90,7 +90,7 @@ def delete_review(Review_id):
         cursor.close()
 
 
-@review.route('/Review/<Review_id>', methods=['PUT'])
+@review.route('/Review/<Review_ID>', methods=['PUT'])
 def update_review(Review_id):
     data = request.get_json()
     if not data:
