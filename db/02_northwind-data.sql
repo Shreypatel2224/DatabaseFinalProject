@@ -652,3 +652,6 @@ INSERT INTO `suppliers` (`id`, `company`, `last_name`, `first_name`, `email_addr
 
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+
+
