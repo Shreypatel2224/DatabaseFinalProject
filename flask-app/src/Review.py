@@ -30,7 +30,7 @@ def add_review():
     title = data.get('Title')
     date = data.get('Date')
     if date:
-        date = datetime.strptime(Date, '%a, %d %b %Y %H:%M:%S GMT').strftime('%Y-%m-%d')
+        date = datetime.strptime(date, '%a, %d %b %Y %H:%M:%S GMT').strftime('%Y-%m-%d')
     rating = data.get('Rating')
     content = data.get('Content')
     user_id = data.get('User_ID')
