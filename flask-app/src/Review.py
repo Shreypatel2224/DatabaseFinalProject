@@ -6,7 +6,7 @@ review = Blueprint('review', __name__)
 
 
 @review.route('/Review', methods=['GET'])
-def get_review():
+def get_review1():
     cursor = db.get_db().cursor()
     cursor.execute('SELECT * FROM Review')
     row_headers = [x[0] for x in cursor.description]
@@ -55,7 +55,7 @@ def add_review():
 #----------------------------------------------------------------------------------------------------------------------------------------
 
 @review.route('/Review/<Review_ID>', methods=['GET'])
-def get_review(Review_ID):
+def get_review2(Review_ID):
     cursor = db.get_db().cursor()
     cursor.execute('select * from Review where Review_ID = {0}'.format(Review_ID))
     row_headers = [x[0] for x in cursor.description]
@@ -150,7 +150,7 @@ def get_review_by_keys(Position_ID, Cycle_ID, Company_ID):
 
 
 @review.route('/Review/<Position_ID>', methods=['GET'])
-def get_review_by_keys(Position_ID):
+def get_review_by_keys2(Position_ID):
     try:
         cursor = db.get_db().cursor()
         cursor.execute(
