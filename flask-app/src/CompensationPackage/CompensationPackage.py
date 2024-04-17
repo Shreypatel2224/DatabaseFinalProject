@@ -5,24 +5,33 @@ from src import db
 
 compensationpackage = Blueprint('CompensationPackage', __name__)
 
-# Get all compensation packages from the DB
-@compensationpackage.route('/CompensationPackage', methods=['GET'])
-def get_CP():
+
+# Get customer detail for customer with particular userID
+@compensationpackage.route('/CompensationPackage/<Position_ID>', methods=['GET'])
+def get_CP(Position_ID):
     cursor = db.get_db().cursor()
-    cursor.execute('select * From CompensationPackage')
+    cursor.execute('select * from CompensationPackage where CPID = {0}'.format(Position_ID))
     row_headers = [x[0] for x in cursor.description]
     json_data = []
     theData = cursor.fetchall()
     for row in theData:
-        json_data.append(dict(zip(row_headers, row)))
+        row = (dict(zip(row_headers, row)))
+
+        for key, value in row.items():
+            if isinstance(value, bytes): 
+                row[key] = value.decode('utf-8')
+        json_data.append(row)
+
     the_response = make_response(jsonify(json_data))
     the_response.status_code = 200
     the_response.mimetype = 'application/json'
     return the_response
 
 
+
+
 # Post route to update compensation packages in the DB
-@compensationpackage.route('/CompensationPackage/<Position_ID>', methods=['POST'])
+@compensationpackage.route('/CompensationPackage', methods=['POST'])
 def create_CP():
     data = request.get_json()
     if not data:
