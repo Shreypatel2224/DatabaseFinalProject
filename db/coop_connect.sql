@@ -1,4 +1,3 @@
-DROP DATABASE CoopConnect;
 CREATE DATABASE IF NOT EXISTS CoopConnect;
 
 USE CoopConnect;
