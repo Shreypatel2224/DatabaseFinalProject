@@ -34,22 +34,22 @@ def create_app():
 
     # Import the various Beluprint Objects
     from src.User import user
-    from src.CompensationPackage import CompensationPackage
-    from src.Question import Question
-    from src.Review import Review
-    from src.Answer import Answer
-    from src.CoopCycle import CoopCycle
+    from src.CompensationPackage import compensationpackage
+    from src.Question import question
+    from src.Review import review
+    from src.Answer import answer
+    from src.CoopCycle import coopcycle
 
 
 
     # Register the routes from each Blueprint with the app object
     # and give a url prefix to each
-    app.register_blueprint(CompensationPackage,   url_prefix='/cp')
-    app.register_blueprint(Question,   url_prefix='/q')
+    app.register_blueprint(compensationpackage,   url_prefix='/cp')
+    app.register_blueprint(question,   url_prefix='/q')
     app.register_blueprint(user,   url_prefix='/u')
-    app.register_blueprint(Review,   url_prefix='/r')
-    app.register_blueprint(Answer,   url_prefix='/a')
-    app.register_blueprint(CoopCycle,   url_prefix='/cc')
+    app.register_blueprint(review,   url_prefix='/r')
+    app.register_blueprint(answer,   url_prefix='/a')
+    app.register_blueprint(coopcycle,   url_prefix='/cc')
 
 
 
