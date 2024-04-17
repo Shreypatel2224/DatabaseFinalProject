@@ -28,7 +28,6 @@ def get_CP(Position_ID):
     return the_response
 
 
-
 # Post route to update compensation packages in the DB
 @compensationpackage.route('/CompensationPackage', methods=['POST'])
 def create_CP():
@@ -36,7 +35,6 @@ def create_CP():
     if not data:
         return make_response(jsonify({'error': 'No data provided'}), 400)
     
-    CPID = data.get('CPID')
     Perks = data.get('Perks')
     Hourly = data.get('Hourly')
     BonusTotal = data.get('BonusTotal')
@@ -44,14 +42,14 @@ def create_CP():
     RelocationTotal = data.get('RelocationTotal')
     Position_ID = data.get('Position_ID')
     
-    if not all([CPID, Perks, Hourly, BonusTotal, HousingTotal, RelocationTotal, Position_ID]):
+    if not all([Perks, Hourly, BonusTotal, HousingTotal, RelocationTotal, Position_ID]):
         return make_response(jsonify({'error': 'Missing data'}), 400)
     
     try:
         cursor = db.get_db().cursor()
         cursor.execute(
-            'INSERT INTO CompensationPackage (CPID, Perks, Hourly, BonusTotal, HousingTotal, RelocationTotal, Position_I) VALUES (%s, %s, %s, %s, %s, %s, %s)',
-            (CPID, Perks, Hourly, BonusTotal, HousingTotal, RelocationTotal, Position_ID)
+            'INSERT INTO CompensationPackage (Perks, Hourly, BonusTotal, HousingTotal, RelocationTotal, Position_I) VALUES (%s, %s, %s, %s, %s, %s)',
+            (Perks, Hourly, BonusTotal, HousingTotal, RelocationTotal, Position_ID)
         )
         db.get_db().commit()  # Commit the changes to the database
         return make_response(jsonify({'success': 'Compensation Package created'}), 201)
