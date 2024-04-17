@@ -159,7 +159,7 @@ def update_user2(User_ID):
     query = '''
         UPDATE User
         SET Username = %s,
-            last_name = %s,
+            User_Type = %s,
             Password = %s,
             Email = %s,
         WHERE User_ID = %s
