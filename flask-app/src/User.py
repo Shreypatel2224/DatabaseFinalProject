@@ -110,7 +110,7 @@ def get_user2(Username):
 
 
 @user.route('/User/<User_ID>', methods=['PUT'])
-def update_user2(User_ID):
+def update_user(User_ID):
     data = request.get_json()
     cursor = db.get_db().cursor()
 
@@ -124,7 +124,7 @@ def update_user2(User_ID):
         SET Username = %s,
             User_Type = %s,
             Password = %s,
-            Email = %s,
+            Email = %s
         WHERE User_ID = %s
     '''
     cursor.execute(query, (Username, User_Type, Password, Email, User_ID))
