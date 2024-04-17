@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify, make_response, current_app
 import json
+from datetime import datetime
 from src import db
 
 
@@ -74,6 +75,9 @@ def update_question(Question_ID):
 
     Title = data.get('Title')
     Date = data.get('Date')
+    if Date:
+        Date = datetime.strptime(Date, '%a, %d %b %Y %H:%M:%S GMT').strftime('%Y-%m-%d')
+
     Status = data.get('Status')
     Content = data.get('Content')
     User_ID = data.get('User_ID')
@@ -85,7 +89,7 @@ def update_question(Question_ID):
             Status = %s,
             Content = %s,
             User_ID = %s
-            
+
         WHERE Question_ID = %s
     '''
     cursor.execute(query, (Title, Date, Status, Content, User_ID, Question_ID))
