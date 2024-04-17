@@ -117,11 +117,11 @@ def get_question_by_ID(Question_ID):
     the_response.mimetype = 'application/json'
     return the_response
 
-# Get question by user id
-@question.route('/Question/<Question_ID>', methods=['GET'])
-def get_question_by_UID(Question_ID):
+# Get question with certain status
+@question.route('/Question/<Status>', methods=['GET'])
+def get_question_by_status(Status):
     cursor = db.get_db().cursor()
-    cursor.execute('select * from Question where Question_ID = {0}'.format(Question_ID))
+    cursor.execute('select * from Question where Question_ID = {0}'.format(Status))
     row_headers = [x[0] for x in cursor.description]
     json_data = []
     theData = cursor.fetchall()
