@@ -97,25 +97,25 @@ def update_answer(Answer_ID):
 
 
 
-# Get answer by answer id
-@answer.route('/Answer/<Answer_ID>', methods=['GET'])
-def get_answer_by_ID(Answer_ID):
-    cursor = db.get_db().cursor()
-    cursor.execute('select * from Answer where Answer_ID = {0}'.format(Answer_ID))
-    row_headers = [x[0] for x in cursor.description]
-    json_data = []
-    theData = cursor.fetchall()
-    for row in theData:
-        row = (dict(zip(row_headers, row)))
-        for key, value in row.items():
-            if isinstance(value, bytes): 
-                row[key] = value.decode('utf-8')
-        json_data.append(row)
+# # Get answer by answer id
+# @answer.route('/Answer/<Answer_ID>', methods=['GET'])
+# def get_answer_by_ID(Answer_ID):
+#     cursor = db.get_db().cursor()
+#     cursor.execute('select * from Answer where Answer_ID = {0}'.format(Answer_ID))
+#     row_headers = [x[0] for x in cursor.description]
+#     json_data = []
+#     theData = cursor.fetchall()
+#     for row in theData:
+#         row = (dict(zip(row_headers, row)))
+#         for key, value in row.items():
+#             if isinstance(value, bytes): 
+#                 row[key] = value.decode('utf-8')
+#         json_data.append(row)
 
-    the_response = make_response(jsonify(json_data))
-    the_response.status_code = 200
-    the_response.mimetype = 'application/json'
-    return the_response
+#     the_response = make_response(jsonify(json_data))
+#     the_response.status_code = 200
+#     the_response.mimetype = 'application/json'
+#     return the_response
 
 
 # Get answer by question id
