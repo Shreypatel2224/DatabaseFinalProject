@@ -88,7 +88,7 @@ def delete_user(User_ID):
 
 #get user with certain username
 @user.route('/User/<Username>', methods=['GET'])
-def get_user(Username):
+def get_user2(Username):
     cursor = db.get_db().cursor()
     cursor.execute('select * from User where User_ID = {0}'.format(Username))
     row_headers = [x[0] for x in cursor.description]
