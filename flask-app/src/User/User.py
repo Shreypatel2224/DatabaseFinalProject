@@ -40,7 +40,7 @@ def create_user():
     try:
         cursor = db.get_db().cursor()
         cursor.execute(
-            'INSERT INTO User (User_ID, Username, User_Type, Password, Email) VALUES (%s, %s, %s, %s)',
+            'INSERT INTO User (Username, User_Type, Password, Email) VALUES (%s, %s, %s, %s)',
             (username, user_type, password, email)
         )
         db.get_db().commit()  # Commit the changes to the database
@@ -48,5 +48,21 @@ def create_user():
     except Exception as e:
         db.get_db().rollback()  # Rollback in case of any error
         return make_response(jsonify({'error': 'Failed to create user'}), 500)
+    finally:
+        cursor.close()
+
+
+@user.route('/user/<user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    try:
+        cursor = db.get_db().cursor()
+        cursor.execute('DELETE FROM User WHERE User_ID = %s', (user_id,))
+        db.get_db().commit()
+        if cursor.rowcount == 0:
+            return make_response(jsonify({'error': 'User not found'}), 404)
+        return make_response(jsonify({'success': 'User deleted'}), 200)
+    except Exception as e:
+        db.get_db().rollback()
+        return make_response(jsonify({'error': 'Failed to delete user'}), 500)
     finally:
         cursor.close()
