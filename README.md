@@ -3,6 +3,8 @@ Co-Op Connect is an innovative web platform designed to enhance the co-op educat
 
 By Shrey Patel, Benoit Schiermeier, Aahil Jubair, Jason Ie, Parth Shah
 
+Link to video recording: https://northeastern.zoom.us/rec/share/ks2saCqKyXXp4Ymn1fvxKJWDDfMDEJn9i7TtuJ99MWVOHQHEy50c2JE6fMfPsx2z.miIkNtAVNF_NQbOk
+
 # MySQL + Flask Boilerplate Project
 
 This repo contains a boilerplate setup for spinning up 3 Docker containers: 
